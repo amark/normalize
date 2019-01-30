@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>HTML normalize unit tests</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="./../normalize.js"></script>
+<script type="module" src="./unitTests.js"></script>
+
+<script type="module">
+
+import { tests, limitFrom, limitTo, showRows } from "./unitTests.js";
+import { htmlNormalizeUnitTests } from "./testRunner.js";
+
+let selectedTests,
+    to = limitTo || limitFrom;
+
+to = typeof to == 'number' ? to+1 : Infinity;
+
+if (limitFrom != null) {
+  selectedTests = tests.slice(limitFrom, to);
+} else {
+  selectedTests = tests;
+}
+
+htmlNormalizeUnitTests(selectedTests, showRows);
+
+</script>
+
+</body>
+</html>
+

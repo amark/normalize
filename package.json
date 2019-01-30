@@ -1,0 +1,13 @@
+{
+  "main": "normalize.js",
+  "dependencies": {
+    "jquery": "^1.12"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  },
+  "scripts": {
+    "test": "live-server --open=test/unitTests.html --ignore=$(pwd)/.git",
+    "sandbox": "live-server --open=test/sandbox.html --ignore=$(pwd)/.git"
+  }
+}
