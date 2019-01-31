@@ -1,0 +1,100 @@
+<html>
+<head>
+  <title>HTML normalize sandbox</title>
+  <meta charset="UTF-8" />
+</head>
+<body>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="./../normalize.js"></script>
+
+<script type="module">
+
+import { requireStylesheet, requireScript, render, styles, str } from './testRunner.js';
+
+var htmlChange, load, minified, renderSandbox, sanitizedChange, init;
+var sourceEl, origHtml, sanitizedHtml, resultEl;
+
+minified = false;
+
+load = () => {
+  requireStylesheet(`//cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor${str.if(minified, '.min')}.css`);
+  requireStylesheet("//cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/css/themes/default.css");
+  return requireScript(`//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor${str.if(minified, '.min')}.js`);
+};
+
+init = async() => {
+  var sourceEditor;
+  renderSandbox();
+  await load();
+  sourceEditor = new MediumEditor(sourceEl);
+  return sourceEditor.subscribe('editableInput', (event, editable) => {
+    return htmlChange(editable.innerHTML, true);
+  });
+};
+
+htmlChange = (str, fromEditor) => {
+  if (!fromEditor) {
+    sourceEl.innerHTML = str;
+  }
+  origHtml.value = str;
+  return sanitizedChange(sanitizedHtml.textContent = $.normalize(str));
+};
+
+sanitizedChange = (str) => {
+  sanitizedHtml.value = str;
+  return resultEl.innerHTML = str;
+};
+
+renderSandbox = () => {
+  render.toLayer({module_name:'sandbox'}, {
+    div: 'Input editor:',
+    '#source .medium-editor': (el) => sourceEl = el,
+    '.orig': {
+      div: 'Original HTML:',
+      'textarea .html': (el) => {
+        origHtml = el;
+        return {
+          onInput: () => {
+            return htmlChange(origHtml.value);
+          }
+        };
+      }
+    },
+    '.sanitized': {
+      div: 'Sanitized HTML:',
+      'textarea .html': (el) => {
+        sanitizedHtml = el;
+        return {
+          onInput: () => {
+            return sanitizedChange(sanitizedHtml.value);
+          }
+        };
+      }
+    },
+    div2: 'Output:',
+    '#result .medium-editor': (el) => resultEl = el
+  });
+};
+
+styles.addScoped({module_name:'sandbox'}, {
+  '.medium-editor': {
+    height: '10em',
+    background: 'white',
+    margin: '1em',
+    color: 'black',
+    overflow: 'scroll'
+  },
+  textarea: {
+    width: 'calc(100% - 4em)',
+    height: '5em',
+    margin: '1em 2em'
+  }
+});
+
+init();
+
+</script>
+
+</body>
+</html>
