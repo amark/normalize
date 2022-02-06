@@ -1,4 +1,4 @@
-## Normalize.js
+## Normalize
 Turn ugly 
 ``` html
 <p>
